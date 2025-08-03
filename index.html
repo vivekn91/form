@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Loan Application Form</title>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+  .container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  .tenure-options {
+    display: flex;
+    gap: 15px;
+  }
+  .tenure-options label {
+    font-weight: normal;
+  }
+  .button-group {
+    text-align: right;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>BUSINESS LOAN APPLICATION FORM</h2>
+  <form id="loanForm">
+    <div class="form-group">
+      <label for="applicantName">APPLICANT NAME:</label>
+      <input type="text" id="applicantName" name="applicantName" required>
+    </div>
+    <div class="form-group">
+      <label for="applicantAadhar">APPLICANT AADHAR NO:</label>
+      <input type="text" id="applicantAadhar" name="applicantAadhar" required>
+    </div>
+    <div class="form-group">
+      <label for="applicantGst">APPLICANT GST NO:</label>
+      <input type="text" id="applicantGst" name="applicantGst">
+    </div>
+    <div class="form-group">
+      <label for="coApplicantName">CO APPLICANT NAME:</label>
+      <input type="text" id="coApplicantName" name="coApplicantName">
+    </div>
+    <div class="form-group">
+      <label for="coApplicantAadhar">CO APPLICANT AADHAR NO:</label>
+      <input type="text" id="coApplicantAadhar" name="coApplicantAadhar">
+    </div>
+    <div class="form-group">
+      <label for="coApplicantPan">CO APPLICANT PAN:</label>
+      <input type="text" id="coApplicantPan" name="coApplicantPan">
+    </div>
+    <div class="form-group">
+      <label>TENURE:</label>
+      <div class="tenure-options">
+        <input type="radio" id="8months" name="tenure" value="8 months">
+        <label for="8months">8 MONTHS</label>
+        <input type="radio" id="10months" name="tenure" value="10 months">
+        <label for="10months">10 Months</label>
+        <input type="radio" id="12months" name="tenure" value="12 months">
+        <label for="12months">12 Months</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="loanAmount">LOAN APPLY AMOUNT:</label>
+      <input type="number" id="loanAmount" name="loanAmount" required>
+    </div>
+    <div class="form-group">
+      <label for="residentialAddress">RESIDENTIAL ADDRESS:</label>
+      <input type="text" id="residentialAddress" name="residentialAddress" required>
+    </div>
+    <div class="form-group">
+      <label for="propertyAddress">PROPERTY ADDRESS (Own):</label>
+      <input type="text" id="propertyAddress" name="propertyAddress">
+    </div>
+    <div class="form-group">
+      <label for="monthlyTurnover">MONTHLY TURN OVER:</label>
+      <input type="number" id="monthlyTurnover" name="monthlyTurnover">
+    </div>
+    
+    <h3>PREVIOUS LOAN DETAILS</h3>
+    <div class="form-group">
+      <label for="financeExists">ANY FINANCE EXISTS:</label>
+      <select id="financeExists" name="financeExists">
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="concernName">CONCERN NAME:</label>
+      <input type="text" id="concernName" name="concernName">
+    </div>
+    <div class="form-group">
+      <label for="existingBalance">EXISTING BALANCE AMOUNT:</label>
+      <input type="number" id="existingBalance" name="existingBalance">
+    </div>
+    <div class="form-group">
+      <label for="bankName">BANK NAME:</label>
+      <input type="text" id="bankName" name="bankName">
+    </div>
+    <div class="form-group">
+      <label for="utrNo">UTR NO:</label>
+      <input type="text" id="utrNo" name="utrNo">
+    </div>
+    <div class="form-group">
+      <label for="chequeNo">CHEQUE NO:</label>
+      <input type="text" id="chequeNo" name="chequeNo">
+    </div>
+    <div class="form-group">
+      <label for="loanClosingDate">LOAN CLOSING DATE:</label>
+      <input type="date" id="loanClosingDate" name="loanClosingDate">
+    </div>
+
+    <div class="button-group">
+      <button type="button" onclick="generatePDF()">Download as PDF</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  window.jsPDF = window.jspdf.jsPDF;
+
+  function generatePDF() {
+    const form = document.getElementById('loanForm');
+    
+    // Create a new div to hold the content for the PDF, based on the form's data
+    const pdfContent = document.createElement('div');
+    pdfContent.style.padding = '20px';
+
+    // Helper function to add a title and value to the PDF content
+    function addFieldToPdf(label, value) {
+        if (value) {
+            const p = document.createElement('p');
+            p.innerHTML = `<strong>${label}:</strong> ${value}`;
+            pdfContent.appendChild(p);
+        }
+    }
+
+    // Extract values from the form and add to the new div
+    addFieldToPdf('APPLICANT NAME', document.getElementById('applicantName').value);
+    addFieldToPdf('APPLICANT AADHAR NO', document.getElementById('applicantAadhar').value);
+    addFieldToPdf('APPLICANT GST NO', document.getElementById('applicantGst').value);
+    addFieldToPdf('CO APPLICANT NAME', document.getElementById('coApplicantName').value);
+    addFieldToPdf('CO APPLICANT AADHAR NO', document.getElementById('coApplicantAadhar').value);
+    addFieldToPdf('CO APPLICANT PAN', document.getElementById('coApplicantPan').value);
+    
+    const selectedTenure = document.querySelector('input[name="tenure"]:checked');
+    if (selectedTenure) {
+        addFieldToPdf('TENURE', selectedTenure.value);
+    }
+
+    addFieldToPdf('LOAN APPLY AMOUNT', document.getElementById('loanAmount').value);
+    addFieldToPdf('RESIDENTIAL ADDRESS', document.getElementById('residentialAddress').value);
+    addFieldToPdf('PROPERTY ADDRESS (Own)', document.getElementById('propertyAddress').value);
+    addFieldToPdf('MONTHLY TURN OVER', document.getElementById('monthlyTurnover').value);
+    
+    // Previous Loan Details
+    const h3 = document.createElement('h3');
+    h3.textContent = 'PREVIOUS LOAN DETAILS';
+    pdfContent.appendChild(h3);
+
+    addFieldToPdf('ANY FINANCE EXISTS', document.getElementById('financeExists').value);
+    addFieldToPdf('CONCERN NAME', document.getElementById('concernName').value);
+    addFieldToPdf('EXISTING BALANCE AMOUNT', document.getElementById('existingBalance').value);
+    addFieldToPdf('BANK NAME', document.getElementById('bankName').value);
+    addFieldToPdf('UTR NO', document.getElementById('utrNo').value);
+    addFieldToPdf('CHEQUE NO', document.getElementById('chequeNo').value);
+    addFieldToPdf('LOAN CLOSING DATE', document.getElementById('loanClosingDate').value);
+
+    // Use html2canvas and jsPDF to generate the PDF
+    html2canvas(pdfContent, { 
+      scale: 2, 
+      windowWidth: pdfContent.scrollWidth, 
+      windowHeight: pdfContent.scrollHeight 
+    }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('loan-application.pdf');
+    });
+  }
+</script>
+
+</body>
+</html>
